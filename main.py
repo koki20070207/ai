@@ -1,39 +1,22 @@
-import pandas as pd
-import random
+import torch
+from torchvision import datasets, transforms
 
-print("🚀 100人分の架空データを生成中...")
+print("🚀 PyTorch起動！AIの準備を開始します...")
 
-# 1. 100人分のランダムなデータ（名前、年齢、言語、点数）を自動で作る
-names = [f"候補生_{i}号" for i in range(1, 101)]
-ages = [random.randint(18, 35) for _ in range(100)]
-languages = [random.choice(['Python', 'JavaScript', 'Go', 'Ruby', 'Java']) for _ in range(100)]
-scores = [random.randint(30, 100) for _ in range(100)]
+# 1. 画像をAIが理解できる「数字の塊（テンソル）」に変換するルールを設定
+transform = transforms.ToTensor()
 
-data = {
-    '名前': names,
-    '年齢': ages,
-    'プログラミング歴': languages,
-    'AIテストの点数': scores
-}
+# 2. 世界中のAI研究者が使う「MNIST（手書きの数字画像）」データをダウンロード
+print("📦 学習用の画像データを集めています（初回は少し時間がかかります）...")
+train_data = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 
-# データをPandasの表（データフレーム）に変換
-df = pd.DataFrame(data)
+# 3. 集めたデータの中身を確認する
+print("\n--- 📊 準備完了！データセット情報 ---")
+print(f"✅ 集まった画像の枚数: {len(train_data)}枚")
 
-# 2. データをCSVファイルとしてPCに保存する（文字化け防止のおまじない付き）
-csv_filename = "ai_students_100.csv"
-df.to_csv(csv_filename, index=False, encoding='utf-8-sig')
-print(f"✅ 【成功】 {csv_filename} をフォルダ内に作成しました！\n")
+# 4. 試しに最初の1枚を取り出してみる
+image, label = train_data[0]
+print(f"✅ 1枚目の画像の正解データ（書かれている数字）: 【 {label} 】")
+print(f"✅ 画像データのサイズ: {image.shape} （1色、縦28×横28ピクセル）")
 
-# 3. 保存したCSVをPythonに読み込む
-loaded_df = pd.read_csv(csv_filename)
-
-# 4. 100人の点数データを一瞬で要約する（神コマンド）
-print("--- 📊 100人のAIテスト点数まとめ ---")
-print(loaded_df['AIテストの点数'].describe())
-print("\n")
-
-# 5. 応用：Pythonが書けて、かつ80点以上の「即戦力エリート」だけを炙り出す
-elite_df = loaded_df[(loaded_df['プログラミング歴'] == 'Python') & (loaded_df['AIテストの点数'] >= 80)]
-
-print(f"--- 🌟 Pythonが書ける80点以上の即戦力エリート（{len(elite_df)}人） ---")
-print(elite_df)
+print("\n🎉 Day 4クリア！AIが画像を読み込む準備が完全に整いました！")
