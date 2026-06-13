@@ -94,3 +94,7 @@ if predicted_number == real_answer:
     print("🎉 大・正・解！！見事、未知の画像を自力で認識しました！")
 else:
     print("💦 残念！でも1周しか学習していないのでご愛嬌です。")
+    # --- ここから追記：AIの記憶をセーブする ---
+save_path = "my_model.pth"
+torch.save(model.state_dict(), save_path)
+print(f"\n💾 AIの記憶（重みデータ）を '{save_path}' にセーブしました！")
