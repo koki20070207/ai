@@ -68,3 +68,29 @@ for epoch in range(epochs):
             running_loss = 0.0
 
 print("\n🎉 特訓完了！AIが手書き数字を判別できる脳みそを手に入れました！")
+# --- ここから追記 ---
+print("\n🎓 AIの最終テスト（推論）を開始します...")
+
+# 1. テスト用の新しい問題集（AIがまだ見ていない1万枚）を準備
+test_data = datasets.MNIST(root='./data', train=False, download=False, transform=transform)
+
+# 2. 試しに「テスト問題の1問目」を取り出す
+test_image, real_answer = test_data[0]
+
+# 3. AIの脳を「学習モード」から「テストモード」に切り替える
+model.eval()
+
+# 4. AIに新しい画像を見せて予想させる
+with torch.no_grad(): # テスト中は脳をアップデートさせない（メモリ節約の魔法）
+    prediction = model(test_image)
+    # 0〜9の10個の確率の中で、一番自信がある数字を選ぶ
+    predicted_number = prediction.argmax().item()
+
+print("--- 📊 テスト結果 ---")
+print(f"✅ AIの予想: 【 {predicted_number} 】")
+print(f"🎯 本当の正解: 【 {real_answer} 】")
+
+if predicted_number == real_answer:
+    print("🎉 大・正・解！！見事、未知の画像を自力で認識しました！")
+else:
+    print("💦 残念！でも1周しか学習していないのでご愛嬌です。")
